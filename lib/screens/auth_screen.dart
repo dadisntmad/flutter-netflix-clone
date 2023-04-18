@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/constants.dart';
+import 'package:netflix_clone/view_models/auth_viewmodel.dart';
 import 'package:netflix_clone/widgets/custom_textfield.dart';
+import 'package:provider/provider.dart';
 
 class AuthScreen extends StatefulWidget {
   const AuthScreen({Key? key}) : super(key: key);
@@ -22,6 +24,9 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<AuthViewModel>();
+    final isLoading = context.select((AuthViewModel model) => model.isLoading);
+
     return Scaffold(
       backgroundColor: secondaryBackground,
       appBar: AppBar(
@@ -55,13 +60,28 @@ class _AuthScreenState extends State<AuthScreen> {
                 height: 50,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(backgroundColor: accentRed),
-                  onPressed: () {},
-                  child: const Text(
-                    'Sign In',
-                    style: TextStyle(
-                      fontSize: 16,
-                    ),
-                  ),
+                  onPressed: isLoading
+                      ? null
+                      : () => model.login(
+                            context: context,
+                            username: _usernameController.text,
+                            password: _passwordController.text,
+                          ),
+                  child: isLoading
+                      ? const SizedBox(
+                          width: 30,
+                          height: 30,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Sign In',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
                 ),
               ),
             ],
