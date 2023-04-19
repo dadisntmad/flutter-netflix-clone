@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:netflix_clone/constants.dart';
+import 'package:netflix_clone/constants/custom_theme.dart';
 import 'package:netflix_clone/navigation/navigation.dart';
 
 Future<void> main() async {
@@ -18,13 +18,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Netflix Clone',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: primaryBackground,
-        appBarTheme: const AppBarTheme(
-          elevation: 0,
-          backgroundColor: primaryBackground,
-        ),
-      ),
+      theme: AppTheme.theme,
       routes: navigation.routes,
       initialRoute: NavigationRoute.loader,
     );

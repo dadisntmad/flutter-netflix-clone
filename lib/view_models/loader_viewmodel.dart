@@ -18,7 +18,7 @@ class LoaderViewModel {
     final isAuthenticated = await _authService.isAuthenticated();
 
     final currentScreen =
-        isAuthenticated ? NavigationRoute.home : NavigationRoute.auth;
+        isAuthenticated ? NavigationRoute.main : NavigationRoute.auth;
 
     Navigator.of(context).pushReplacementNamed(currentScreen);
   }

@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/api/auth_client.dart';
 import 'package:netflix_clone/navigation/navigation.dart';
 import 'package:netflix_clone/services/auth_service.dart';
 import 'package:netflix_clone/utils/validator.dart';
 
 class AuthViewModel extends ChangeNotifier {
-  final _authClient = AuthClient();
   final _authService = AuthService();
 
   bool _isLoading = false;

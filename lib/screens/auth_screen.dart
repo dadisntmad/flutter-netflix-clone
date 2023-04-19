@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/constants.dart';
+import 'package:netflix_clone/constants/custom_colors.dart';
 import 'package:netflix_clone/view_models/auth_viewmodel.dart';
 import 'package:netflix_clone/widgets/custom_textfield.dart';
 import 'package:provider/provider.dart';
