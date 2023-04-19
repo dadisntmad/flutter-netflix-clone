@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/api/auth_client.dart';
-import 'package:netflix_clone/screens/home_screen.dart';
+import 'package:netflix_clone/navigation/navigation.dart';
 import 'package:netflix_clone/services/auth_service.dart';
 import 'package:netflix_clone/utils/validator.dart';
 
@@ -53,7 +53,7 @@ class AuthViewModel extends ChangeNotifier {
     _errorMessage = await _onCatchError(username, password);
 
     if (_errorMessage == null) {
-      Navigator.of(context).pushReplacement(HomeScreen.route());
+      Navigator.of(context).pushReplacementNamed(NavigationRoute.home);
     } else {
       _updateState(errorMessage, false);
     }

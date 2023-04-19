@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
-  static route() => MaterialPageRoute(builder: (context) => const HomeScreen());
-
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
