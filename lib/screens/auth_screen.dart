@@ -26,6 +26,8 @@ class _AuthScreenState extends State<AuthScreen> {
   Widget build(BuildContext context) {
     final model = context.read<AuthViewModel>();
     final isLoading = context.select((AuthViewModel model) => model.isLoading);
+    final errorText =
+        context.select((AuthViewModel model) => model.errorMessage);
 
     return Scaffold(
       backgroundColor: secondaryBackground,
@@ -47,12 +49,14 @@ class _AuthScreenState extends State<AuthScreen> {
               CustomTextField(
                 controller: _usernameController,
                 hintText: 'Username',
+                errorText: errorText,
               ),
               const SizedBox(height: 24),
               CustomTextField(
                 controller: _passwordController,
                 hintText: 'Password',
                 isPassword: true,
+                errorText: errorText,
               ),
               const SizedBox(height: 24),
               SizedBox(

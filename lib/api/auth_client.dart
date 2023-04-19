@@ -1,7 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:netflix_clone/utils/validator.dart';
 
 class AuthClient {
   final _httpClient = http.Client();
@@ -13,13 +15,21 @@ class AuthClient {
       Uri.parse('$_baseUrl/token/new?api_key=$_apiKey'),
     );
 
-    if (response.statusCode == 200) {
-      final token = jsonDecode(response.body) as Map<String, dynamic>;
-      final result = token['request_token'] as String;
-      return result;
-    } else {
-      throw Exception('Failed making a token');
+    try {
+      if (response.statusCode == 200) {
+        final token = jsonDecode(response.body) as Map<String, dynamic>;
+        validator(response, token);
+        final result = token['request_token'] as String;
+        return result;
+      }
+    } on SocketException {
+      throw ExceptionType(ErrorTypes.networkError);
+    } on ExceptionType {
+      rethrow;
+    } catch (_) {
+      throw ExceptionType(ErrorTypes.otherError);
     }
+    throw ExceptionType(ErrorTypes.otherError);
   }
 
   Future<String> _validateUserWithLogin({
@@ -41,13 +51,21 @@ class AuthClient {
       ),
     );
 
-    if (response.statusCode == 200) {
-      final token = jsonDecode(response.body) as Map<String, dynamic>;
-      final result = token['request_token'] as String;
-      return result;
-    } else {
-      throw Exception('Failed to validate');
+    try {
+      if (response.statusCode == 200) {
+        final token = jsonDecode(response.body) as Map<String, dynamic>;
+        validator(response, token);
+        final result = token['request_token'] as String;
+        return result;
+      }
+    } on SocketException {
+      throw ExceptionType(ErrorTypes.networkError);
+    } on ExceptionType {
+      rethrow;
+    } catch (_) {
+      throw ExceptionType(ErrorTypes.otherError);
     }
+    throw ExceptionType(ErrorTypes.otherError);
   }
 
   Future<String> _onMakeSession({required String requestToken}) async {
@@ -63,13 +81,21 @@ class AuthClient {
       ),
     );
 
-    if (response.statusCode == 200) {
-      final sessionId = jsonDecode(response.body) as Map<String, dynamic>;
-      final result = sessionId['session_id'] as String;
-      return result;
-    } else {
-      throw Exception('Failed to make session');
+    try {
+      if (response.statusCode == 200) {
+        final sessionId = jsonDecode(response.body) as Map<String, dynamic>;
+        validator(response, sessionId);
+        final result = sessionId['session_id'] as String;
+        return result;
+      }
+    } on SocketException {
+      throw ExceptionType(ErrorTypes.networkError);
+    } on ExceptionType {
+      rethrow;
+    } catch (_) {
+      throw ExceptionType(ErrorTypes.otherError);
     }
+    throw ExceptionType(ErrorTypes.otherError);
   }
 
   Future<String> signIn({
