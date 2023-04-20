@@ -26,7 +26,7 @@ class _MainScreenState extends State<MainScreen> {
         index: _currentIndex,
         children: [
           _screenProvider.homeScreen(),
-          const Text('New & Hot'),
+          _screenProvider.upcomingMovieScreen(),
           const Text('Favorites'),
         ],
       ),

@@ -5,6 +5,7 @@ abstract class NavigationRoute {
   static const loader = '/';
   static const main = '/main';
   static const home = '/home';
+  static const upcoming = '/upcoming';
   static const auth = '/auth';
 }
 
@@ -15,6 +16,7 @@ class Navigation {
     NavigationRoute.loader: (_) => _screenProvider.loaderScreen(),
     NavigationRoute.main: (_) => _screenProvider.mainScreen(),
     NavigationRoute.home: (_) => _screenProvider.homeScreen(),
+    NavigationRoute.upcoming: (_) => _screenProvider.upcomingMovieScreen(),
     NavigationRoute.auth: (_) => _screenProvider.authScreen(),
   };
 }
