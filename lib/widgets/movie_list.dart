@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/models/movie.dart';
+import 'package:netflix_clone/utils/get_image.dart';
 
 class MovieList extends StatelessWidget {
   final String title;
-  final int itemCount;
+  final List<Movie> content;
 
   const MovieList({
     Key? key,
     required this.title,
-    required this.itemCount,
+    required this.content,
   }) : super(key: key);
 
   @override
@@ -16,7 +18,7 @@ class MovieList extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 14),
           child: Text(
             title,
             style: const TextStyle(
@@ -29,10 +31,15 @@ class MovieList extends StatelessWidget {
           height: 200,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
-            itemCount: itemCount,
+            itemCount: content.length,
             itemExtent: 150,
             itemBuilder: (BuildContext context, int index) {
+              final movie = content[index];
+
               return GestureDetector(
+                onTap: () {
+                  print('Movie: ${movie.id}');
+                },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6),
                   child: Container(
@@ -41,7 +48,7 @@ class MovieList extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: Image.network(
-                      'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/49WJfeN0moxb9IPfGn8AIqMGskD.jpg',
+                      getImage('${movie.posterPath}'),
                     ),
                   ),
                 ),

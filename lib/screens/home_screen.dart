@@ -1,56 +1,75 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/screens/loader_screen.dart';
+import 'package:netflix_clone/utils/get_image.dart';
+import 'package:netflix_clone/view_models/home_viewmodel.dart';
 import 'package:netflix_clone/widgets/movie_list.dart';
+import 'package:provider/provider.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    context.read<HomeViewModel>().getData();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('For username'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.cast,
+    final model = context.watch<HomeViewModel>();
+
+    return model.isLoading
+        ? const LoaderScreen()
+        : Scaffold(
+            appBar: AppBar(
+              title: const Text('For username'),
+              actions: [
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.cast,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: const Icon(
+                    Icons.search,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {},
+                  icon: Image.asset(
+                    'assets/profile_image.png',
+                    width: 25,
+                    height: 25,
+                  ),
+                ),
+              ],
             ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.search,
+            body: ListView(
+              children: [
+                const _MovieCard(),
+                const SizedBox(height: 24),
+                MovieList(
+                  title: 'Now Playing',
+                  content: model.nowPlayingMovies,
+                ),
+                MovieList(
+                  title: 'Popular',
+                  content: model.popularMovies,
+                ),
+                MovieList(
+                  title: 'Top Rated',
+                  content: model.topRatedMovies,
+                ),
+              ],
             ),
-          ),
-          IconButton(
-            onPressed: () {},
-            icon: Image.asset(
-              'assets/profile_image.png',
-              width: 25,
-              height: 25,
-            ),
-          ),
-        ],
-      ),
-      body: ListView(
-        children: const [
-          _MovieCard(),
-          SizedBox(height: 24),
-          MovieList(
-            title: 'Title 1',
-            itemCount: 5,
-          ),
-          MovieList(
-            title: 'Title 2',
-            itemCount: 10,
-          ),
-          MovieList(
-            title: 'Title 3',
-            itemCount: 15,
-          ),
-        ],
-      ),
-    );
+          );
   }
 }
 
@@ -59,32 +78,37 @@ class _MovieCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<HomeViewModel>().latestReleasedMovie;
+
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
         Container(
           width: 350.0,
           height: 450.0,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            image: DecorationImage(
-              image: const NetworkImage(
-                'https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8j12tohv1NBZNmpU93f47sAKBbw.jpg',
-              ),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.black.withOpacity(0.5),
-                BlendMode.darken,
-              ),
-            ),
-          ),
+          decoration: model?.posterPath != null
+              ? BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      getImage('${model?.posterPath}'),
+                    ),
+                    fit: BoxFit.cover,
+                    colorFilter: ColorFilter.mode(
+                      Colors.black.withOpacity(0.5),
+                      BlendMode.darken,
+                    ),
+                  ),
+                )
+              : null,
           child: Center(
             child: Text(
-              'movie name'.toUpperCase(),
+              '${model?.title}'.toUpperCase(),
               style: const TextStyle(
                 fontSize: 32,
                 fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
           ),
         ),
