@@ -9,6 +9,8 @@ class Movie {
   final String overview;
   @JsonKey(name: 'poster_path')
   final String? posterPath;
+  @JsonKey(name: 'backdrop_path')
+  final String? backdropPath;
   @JsonKey(name: 'release_date')
   final String releaseDate;
 
@@ -17,6 +19,7 @@ class Movie {
     required this.title,
     required this.overview,
     required this.posterPath,
+    required this.backdropPath,
     required this.releaseDate,
   });
 

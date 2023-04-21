@@ -32,7 +32,20 @@ class MovieClient {
       final result = jsonDecode(response.body) as Map<String, dynamic>;
       return MovieList.fromJson(result);
     } else {
-      throw Exception('Failed to fetch now playing movies.');
+      throw Exception('Failed to fetch movies.');
+    }
+  }
+
+  Future<MovieList> fetchUpcomingMovies() async {
+    final response = await _httpClient.get(
+      Uri.parse('$_baseUrl/upcoming?api_key=$_apiKey'),
+    );
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body) as Map<String, dynamic>;
+      return MovieList.fromJson(result);
+    } else {
+      throw Exception('Failed to load upcoming movies.');
     }
   }
 }

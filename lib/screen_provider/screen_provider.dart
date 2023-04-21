@@ -7,6 +7,7 @@ import 'package:netflix_clone/screens/upcoming_movie_screen.dart';
 import 'package:netflix_clone/view_models/auth_viewmodel.dart';
 import 'package:netflix_clone/view_models/home_viewmodel.dart';
 import 'package:netflix_clone/view_models/loader_viewmodel.dart';
+import 'package:netflix_clone/view_models/upcoming_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 class ScreenProvider {
@@ -29,7 +30,10 @@ class ScreenProvider {
   }
 
   Widget upcomingMovieScreen() {
-    return const UpcomingMovieScreen();
+    return ChangeNotifierProvider(
+      create: (_) => UpcomingViewModel(),
+      child: const UpcomingMovieScreen(),
+    );
   }
 
   Widget loaderScreen() {
