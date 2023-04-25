@@ -111,4 +111,26 @@ class AuthClient {
     final sessionId = await _onMakeSession(requestToken: validationToken);
     return sessionId;
   }
+
+  Future<bool> signOut(String sessionId) async {
+    final response = await _httpClient.delete(
+      Uri.parse('$_baseUrl/session?api_key=$_apiKey'),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, String>{
+          'session_id': sessionId,
+        },
+      ),
+    );
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body) as Map<String, dynamic>;
+      final success = result['success'] as bool;
+      return success;
+    } else {
+      throw Exception('Failed to sign out.');
+    }
+  }
 }

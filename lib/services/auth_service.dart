@@ -19,4 +19,11 @@ class AuthService {
 
     await _userDataService.setSessionId(sessionId);
   }
+
+  Future<void> logout() async {
+    final sessionId = await _userDataService.getSessionId();
+
+    await _authClient.signOut(sessionId!);
+    await _userDataService.deleteSessionId();
+  }
 }

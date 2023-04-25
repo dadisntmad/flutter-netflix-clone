@@ -3,6 +3,7 @@ import 'package:netflix_clone/navigation/navigation.dart';
 import 'package:netflix_clone/screens/loader_screen.dart';
 import 'package:netflix_clone/utils/get_image.dart';
 import 'package:netflix_clone/view_models/home_viewmodel.dart';
+import 'package:netflix_clone/view_models/user_viewmodel.dart';
 import 'package:netflix_clone/widgets/movie_list.dart';
 import 'package:provider/provider.dart';
 
@@ -17,18 +18,20 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     context.read<HomeViewModel>().getData();
+    context.read<UserViewModel>().getAccountDetails();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final model = context.watch<HomeViewModel>();
+    final username = context.read<UserViewModel>().user?.username;
 
     return model.isLoading
         ? const LoaderScreen()
         : Scaffold(
             appBar: AppBar(
-              title: const Text('For username'),
+              title: Text('For $username'),
               actions: [
                 IconButton(
                   onPressed: () {},

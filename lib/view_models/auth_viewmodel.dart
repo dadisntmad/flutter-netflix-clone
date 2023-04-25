@@ -51,7 +51,7 @@ class AuthViewModel extends ChangeNotifier {
     _errorMessage = await _onCatchError(username, password);
 
     if (_errorMessage == null) {
-      Navigator.of(context).pushReplacementNamed(NavigationRoute.home);
+      Navigator.of(context).pushReplacementNamed(NavigationRoute.main);
     } else {
       _updateState(errorMessage, false);
     }
