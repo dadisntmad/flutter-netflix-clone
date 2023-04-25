@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:netflix_clone/navigation/navigation.dart';
 import 'package:netflix_clone/screens/loader_screen.dart';
 import 'package:netflix_clone/utils/get_image.dart';
 import 'package:netflix_clone/view_models/upcoming_viewmodel.dart';
@@ -46,7 +47,9 @@ class _UpcomingMovieScreenState extends State<UpcomingMovieScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(NavigationRoute.profile);
+                  },
                   icon: Image.asset(
                     'assets/profile_image.png',
                     width: 25,

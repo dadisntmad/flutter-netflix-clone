@@ -14,7 +14,7 @@ class UpcomingViewModel extends ChangeNotifier {
   Future<void> getUpcomingMovies() async {
     _isLoading = true;
 
-    final response = await _movieClient.fetchUpcomingMovies();
+    final response = await _movieClient.fetchMovies('/upcoming');
     _upcomingMovies = response.results;
 
     _isLoading = false;

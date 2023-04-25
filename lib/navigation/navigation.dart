@@ -7,6 +7,7 @@ abstract class NavigationRoute {
   static const home = '/home';
   static const upcoming = '/upcoming';
   static const auth = '/auth';
+  static const profile = '/profile';
 }
 
 class Navigation {
@@ -18,5 +19,6 @@ class Navigation {
     NavigationRoute.home: (_) => _screenProvider.homeScreen(),
     NavigationRoute.upcoming: (_) => _screenProvider.upcomingMovieScreen(),
     NavigationRoute.auth: (_) => _screenProvider.authScreen(),
+    NavigationRoute.profile: (_) => _screenProvider.profileScreen(),
   };
 }
