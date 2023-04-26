@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:netflix_clone/navigation/navigation.dart';
 import 'package:netflix_clone/screens/loader_screen.dart';
 import 'package:netflix_clone/utils/get_image.dart';
-import 'package:netflix_clone/view_models/home_viewmodel.dart';
-import 'package:netflix_clone/view_models/user_viewmodel.dart';
+import 'package:netflix_clone/view_models/viewmodels.dart';
 import 'package:netflix_clone/widgets/movie_list.dart';
 import 'package:provider/provider.dart';
 

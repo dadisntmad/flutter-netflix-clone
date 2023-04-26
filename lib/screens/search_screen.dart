@@ -18,6 +18,8 @@ class SearchScreen extends StatelessWidget {
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         itemCount: model.movies.length,
         itemBuilder: (BuildContext context, int index) {
+          model.loadNextPage(index);
+
           return _Movies(index: index);
         },
       ),
@@ -35,13 +37,6 @@ class _SearchBar extends StatelessWidget {
     return TextField(
       onChanged: model.searchMovie,
       decoration: InputDecoration(
-        suffixIcon: IconButton(
-          iconSize: 15,
-          onPressed: () {},
-          icon: const Icon(
-            Icons.cancel,
-          ),
-        ),
         suffixIconColor: Colors.grey,
         suffixIconConstraints: BoxConstraints.tight(const Size.square(32)),
         hintText: 'Search',
@@ -52,6 +47,7 @@ class _SearchBar extends StatelessWidget {
         isDense: true,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 12,
+          vertical: 6,
         ),
       ),
     );
@@ -75,18 +71,27 @@ class _Movies extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Container(
-              width: 150,
-              height: 100,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                image: DecorationImage(
-                  image: NetworkImage(
-                    getImage('${movie.backdropPath}'),
+            movie.backdropPath != null
+                ? Container(
+                    width: 150,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      image: DecorationImage(
+                        image: NetworkImage(
+                          getImage('${movie.backdropPath}'),
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(
+                    width: 150,
+                    height: 100,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      color: Colors.grey,
+                    ),
                   ),
-                ),
-              ),
-            ),
             const SizedBox(width: 8),
             Expanded(
               child: Text(

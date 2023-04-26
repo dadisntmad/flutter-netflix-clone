@@ -7,23 +7,38 @@ import 'package:netflix_clone/models/movie.dart';
 class SearchViewModel extends ChangeNotifier {
   final _movieClient = MovieClient();
 
-  List<Movie> _movies = [];
+  final List<Movie> _movies = [];
   List<Movie> get movies => _movies;
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
 
-  String? _searchQuery;
-  String? get searchQuery => _searchQuery;
+  String _searchQuery = '';
 
   Timer? _debounce;
 
+  int _currentPage = 0;
+  int _totalPages = 1;
+
+  Future<void> _resetMoviesPerSearch() async {
+    _currentPage = 0;
+    _totalPages = 1;
+    _movies.clear();
+    await _getMovies();
+  }
+
   Future<void> _getMovies() async {
+    if (_isLoading || _currentPage >= _totalPages) return;
+
     _isLoading = true;
 
-    final response = await _movieClient.searchMovie(_searchQuery!);
+    final page = _currentPage += 1;
 
-    _movies = response.results;
+    final response = await _movieClient.searchMovie(_searchQuery, page);
+
+    _movies.addAll(response.results);
+    _currentPage = response.page;
+    _totalPages = response.totalPages;
 
     _isLoading = false;
 
@@ -36,7 +51,12 @@ class SearchViewModel extends ChangeNotifier {
       final searchQuery = query.isNotEmpty ? query : '';
       if (_searchQuery == searchQuery) return;
       _searchQuery = searchQuery;
-      await _getMovies();
+      await _resetMoviesPerSearch();
     });
+  }
+
+  void loadNextPage(int index) {
+    if (index < _movies.length - 1) return;
+    _getMovies();
   }
 }

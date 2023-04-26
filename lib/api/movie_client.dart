@@ -36,9 +36,9 @@ class MovieClient {
     }
   }
 
-  Future<MovieList> searchMovie(String searchQuery) async {
+  Future<MovieList> searchMovie(String searchQuery, int page) async {
     final url =
-        'https://api.themoviedb.org/3/search/movie?api_key=$_apiKey&query=$searchQuery';
+        'https://api.themoviedb.org/3/search/movie?api_key=$_apiKey&query=$searchQuery&page=$page';
 
     final response = await _httpClient.get(Uri.parse(url));
 
