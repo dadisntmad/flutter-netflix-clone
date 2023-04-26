@@ -6,6 +6,7 @@ abstract class NavigationRoute {
   static const main = '/main';
   static const auth = '/auth';
   static const profile = '/profile';
+  static const search = '/search';
 }
 
 class Navigation {
@@ -16,5 +17,6 @@ class Navigation {
     NavigationRoute.main: (_) => _screenProvider.mainScreen(),
     NavigationRoute.auth: (_) => _screenProvider.authScreen(),
     NavigationRoute.profile: (_) => _screenProvider.profileScreen(),
+    NavigationRoute.search: (_) => _screenProvider.searchScreen(),
   };
 }

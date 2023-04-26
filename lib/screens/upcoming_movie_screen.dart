@@ -41,7 +41,9 @@ class _UpcomingMovieScreenState extends State<UpcomingMovieScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(NavigationRoute.search);
+                  },
                   icon: const Icon(
                     Icons.search,
                   ),

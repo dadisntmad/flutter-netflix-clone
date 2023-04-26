@@ -4,6 +4,7 @@ import 'package:netflix_clone/screens/home_screen.dart';
 import 'package:netflix_clone/screens/loader_screen.dart';
 import 'package:netflix_clone/screens/main_screen.dart';
 import 'package:netflix_clone/screens/profile_screen.dart';
+import 'package:netflix_clone/screens/search_screen.dart';
 import 'package:netflix_clone/screens/upcoming_movie_screen.dart';
 import 'package:netflix_clone/view_models/auth_viewmodel.dart';
 import 'package:netflix_clone/view_models/home_viewmodel.dart';
@@ -47,5 +48,9 @@ class ScreenProvider {
 
   Widget profileScreen() {
     return const ProfileScreen();
+  }
+
+  Widget searchScreen() {
+    return const SearchScreen();
   }
 }

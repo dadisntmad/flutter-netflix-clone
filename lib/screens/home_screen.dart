@@ -40,7 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(NavigationRoute.search);
+                  },
                   icon: const Icon(
                     Icons.search,
                   ),
