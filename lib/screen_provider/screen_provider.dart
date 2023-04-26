@@ -1,15 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:netflix_clone/screens/auth_screen.dart';
-import 'package:netflix_clone/screens/home_screen.dart';
-import 'package:netflix_clone/screens/loader_screen.dart';
-import 'package:netflix_clone/screens/main_screen.dart';
-import 'package:netflix_clone/screens/profile_screen.dart';
-import 'package:netflix_clone/screens/search_screen.dart';
-import 'package:netflix_clone/screens/upcoming_movie_screen.dart';
-import 'package:netflix_clone/view_models/auth_viewmodel.dart';
-import 'package:netflix_clone/view_models/home_viewmodel.dart';
-import 'package:netflix_clone/view_models/loader_viewmodel.dart';
-import 'package:netflix_clone/view_models/upcoming_viewmodel.dart';
+import 'package:netflix_clone/screens/screens.dart';
+import 'package:netflix_clone/view_models/viewmodels.dart';
 import 'package:provider/provider.dart';
 
 class ScreenProvider {
@@ -51,6 +42,9 @@ class ScreenProvider {
   }
 
   Widget searchScreen() {
-    return const SearchScreen();
+    return ChangeNotifierProvider(
+      create: (_) => SearchViewModel(),
+      child: const SearchScreen(),
+    );
   }
 }

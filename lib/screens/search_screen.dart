@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:netflix_clone/utils/get_image.dart';
+import 'package:netflix_clone/view_models/search_viewmodel.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatelessWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final model = context.watch<SearchViewModel>();
+
     return Scaffold(
       appBar: AppBar(
         title: const _SearchBar(),
       ),
       body: ListView.builder(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-        itemCount: 25,
+        itemCount: model.movies.length,
         itemBuilder: (BuildContext context, int index) {
-          return const _Movies();
+          return _Movies(index: index);
         },
       ),
     );
@@ -25,7 +30,10 @@ class _SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<SearchViewModel>();
+
     return TextField(
+      onChanged: model.searchMovie,
       decoration: InputDecoration(
         suffixIcon: IconButton(
           iconSize: 15,
@@ -51,10 +59,15 @@ class _SearchBar extends StatelessWidget {
 }
 
 class _Movies extends StatelessWidget {
-  const _Movies({Key? key}) : super(key: key);
+  final int index;
+
+  const _Movies({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<SearchViewModel>();
+    final movie = model.movies[index];
+
     return InkWell(
       onTap: () {},
       child: Padding(
@@ -67,9 +80,9 @@ class _Movies extends StatelessWidget {
               height: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
-                image: const DecorationImage(
+                image: DecorationImage(
                   image: NetworkImage(
-                    'https://ntvb.tmsimg.com/assets/p16962226_v_h10_af.jpg?w=960&h=540',
+                    getImage('${movie.backdropPath}'),
                   ),
                 ),
               ),
@@ -77,7 +90,7 @@ class _Movies extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               child: Text(
-                'Murder Mystery',
+                movie.title,
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,

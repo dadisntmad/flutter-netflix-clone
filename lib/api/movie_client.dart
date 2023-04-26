@@ -35,4 +35,18 @@ class MovieClient {
       throw Exception('Failed to fetch movies.');
     }
   }
+
+  Future<MovieList> searchMovie(String searchQuery) async {
+    final url =
+        'https://api.themoviedb.org/3/search/movie?api_key=$_apiKey&query=$searchQuery';
+
+    final response = await _httpClient.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body) as Map<String, dynamic>;
+      return MovieList.fromJson(result);
+    } else {
+      throw Exception('Failed to search movies.');
+    }
+  }
 }
