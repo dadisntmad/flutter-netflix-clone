@@ -7,6 +7,7 @@ abstract class NavigationRoute {
   static const auth = '/auth';
   static const profile = '/profile';
   static const search = '/search';
+  static const movieDetailed = '/detailed';
 }
 
 class Navigation {
@@ -19,4 +20,18 @@ class Navigation {
     NavigationRoute.profile: (_) => _screenProvider.profileScreen(),
     NavigationRoute.search: (_) => _screenProvider.searchScreen(),
   };
+
+  Route<Object> onGenerateRoute(RouteSettings settings) {
+    switch (settings.name) {
+      case NavigationRoute.movieDetailed:
+        final id = settings.arguments as int;
+
+        return MaterialPageRoute(
+          builder: (_) => _screenProvider.detailedScreen(id),
+        );
+
+      default:
+        return MaterialPageRoute(builder: (_) => const Text('Undefined route'));
+    }
+  }
 }

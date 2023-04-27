@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.theme,
         routes: navigation.routes,
         initialRoute: NavigationRoute.loader,
+        onGenerateRoute: navigation.onGenerateRoute,
       ),
     );
   }

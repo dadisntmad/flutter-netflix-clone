@@ -47,4 +47,11 @@ class ScreenProvider {
       child: const SearchScreen(),
     );
   }
+
+  Widget detailedScreen(int id) {
+    return ChangeNotifierProvider(
+      create: (_) => MovieDetailedViewModel(id: id),
+      child: const MovieDetailedScreen(),
+    );
+  }
 }

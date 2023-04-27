@@ -123,7 +123,12 @@ class _MovieCard extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  NavigationRoute.movieDetailed,
+                  arguments: model?.id,
+                );
+              },
               child: Container(
                 margin: const EdgeInsets.only(bottom: 14),
                 width: 150,

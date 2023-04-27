@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:netflix_clone/models/movie.dart';
+import 'package:netflix_clone/navigation/navigation.dart';
 import 'package:netflix_clone/utils/get_image.dart';
 
 class MovieList extends StatelessWidget {
@@ -38,7 +39,10 @@ class MovieList extends StatelessWidget {
 
               return GestureDetector(
                 onTap: () {
-                  print('Movie: ${movie.id}');
+                  Navigator.of(context).pushNamed(
+                    NavigationRoute.movieDetailed,
+                    arguments: movie.id,
+                  );
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 6),
