@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:netflix_clone/models/movie.dart';
+import 'package:netflix_clone/models/movie_detailed.dart';
 import 'package:netflix_clone/models/movie_list.dart';
 
 class MovieClient {
@@ -47,6 +48,32 @@ class MovieClient {
       return MovieList.fromJson(result);
     } else {
       throw Exception('Failed to search movies.');
+    }
+  }
+
+  Future<MovieDetailed> fetchDetailedMovie(int id) async {
+    final response = await _httpClient.get(Uri.parse(
+      '$_baseUrl/$id?api_key=$_apiKey&append_to_response=videos%2Ccredits',
+    ));
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body) as Map<String, dynamic>;
+      return MovieDetailed.fromJson(result);
+    } else {
+      throw Exception('Failed to fetch movie details.');
+    }
+  }
+
+  Future<MovieList> fetchSimilarMovies(int id) async {
+    final response = await _httpClient.get(
+      Uri.parse('$_baseUrl/$id/similar?api_key=$_apiKey'),
+    );
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body) as Map<String, dynamic>;
+      return MovieList.fromJson(result);
+    } else {
+      throw Exception('Failed to fetch similar movies.');
     }
   }
 }

@@ -1,67 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:netflix_clone/constants/custom_colors.dart';
+import 'package:netflix_clone/navigation/navigation.dart';
+import 'package:netflix_clone/screens/screens.dart';
+import 'package:netflix_clone/utils/get_image.dart';
+import 'package:netflix_clone/view_models/viewmodels.dart';
+import 'package:provider/provider.dart';
 
-class MovieDetailedScreen extends StatelessWidget {
+class MovieDetailedScreen extends StatefulWidget {
   const MovieDetailedScreen({Key? key}) : super(key: key);
 
   @override
+  State<MovieDetailedScreen> createState() => _MovieDetailedScreenState();
+}
+
+class _MovieDetailedScreenState extends State<MovieDetailedScreen> {
+  @override
+  void initState() {
+    context.read<MovieDetailedViewModel>().getDetails();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: ListView(
-          children: [
-            Stack(
-              children: [
-                const _Trailer(),
-                Padding(
-                  padding: const EdgeInsets.only(top: 4, right: 4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+    final model = context.watch<MovieDetailedViewModel>();
+    final similar = model.similarMovies;
+
+    return model.isLoading
+        ? const LoaderScreen()
+        : Scaffold(
+            body: SafeArea(
+              child: ListView(
+                children: [
+                  Stack(
                     children: [
-                      _ActionButton(
-                        icon: Icons.cast,
-                        onTap: () {},
-                      ),
-                      const SizedBox(width: 10),
-                      _ActionButton(
-                        icon: Icons.close,
-                        onTap: () {
-                          Navigator.of(context).pop();
-                        },
+                      const _Trailer(),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4, right: 4),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            _ActionButton(
+                              icon: Icons.cast,
+                              onTap: () {},
+                            ),
+                            const SizedBox(width: 10),
+                            _ActionButton(
+                              icon: Icons.close,
+                              onTap: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 14),
-            const _Description(),
-            const _RateActions(),
-            const SizedBox(height: 14),
-            const Padding(
-              padding: EdgeInsets.only(left: 14),
-              child: Text(
-                'More Like This',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.grey,
-                ),
+                  const SizedBox(height: 14),
+                  const _Description(),
+                  const _RateActions(),
+                  const SizedBox(height: 14),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 14),
+                    child: Text(
+                      'More Like This',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 14),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: similar.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return _SimilarMovies(index: index);
+                    },
+                  ),
+                ],
               ),
             ),
-            const SizedBox(height: 14),
-            ListView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: 10,
-              itemBuilder: (BuildContext context, int index) {
-                return _SimilarMovies(index: index);
-              },
-            ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 }
 
@@ -154,6 +176,29 @@ class _Description extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<MovieDetailedViewModel>();
+    final movie = model.movie;
+
+    final parsedDate = DateTime.parse(movie!.releaseDate);
+    final date = DateFormat('y').format(parsedDate);
+
+    final List<String> genres = [];
+    for (var genre in movie.genres) {
+      genres.add(genre.name);
+    }
+
+    final List<String> actors = [];
+    for (var actor in movie.credits.cast) {
+      actors.add(actor.name);
+    }
+
+    final List<String> directors = [];
+    for (var director in movie.credits.crew) {
+      if (director.department == 'Directing') {
+        directors.add(director.name);
+      }
+    }
+
     const castTextStyle = TextStyle(color: Colors.grey);
 
     return Padding(
@@ -161,27 +206,27 @@ class _Description extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Movie Name',
-            style: TextStyle(
+          Text(
+            '${movie?.title}',
+            style: const TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.w600,
             ),
           ),
           const SizedBox(height: 4),
           Row(
-            children: const [
+            children: [
               Text(
-                '2023',
-                style: TextStyle(
+                date,
+                style: const TextStyle(
                   fontSize: 16,
                 ),
               ),
-              SizedBox(width: 4),
+              const SizedBox(width: 4),
               Expanded(
                 child: Text(
-                  'Genre 1 • Genre 2 • Genre 3 ',
-                  style: TextStyle(
+                  genres.join(' • '),
+                  style: const TextStyle(
                     fontSize: 16,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -205,19 +250,19 @@ class _Description extends StatelessWidget {
             backgroundColor: accentGrey,
           ),
           const SizedBox(height: 14),
-          const Text(
-            'After a heroic job of successfully landing his storm-damaged aircraft in a war zone, a fearless pilot finds himself between the agendas of multiple militias planning to take the plane and its passengers hostage.',
-            style: TextStyle(
+          Text(
+            movie.overview,
+            style: const TextStyle(
               fontSize: 15,
             ),
           ),
           const SizedBox(height: 10),
-          const Text(
-            'Cast: Actor 1, Actor 2, Actor 3, Actor 4, Actor 5',
+          Text(
+            'Cast: ${actors.join(', ')}',
             style: castTextStyle,
           ),
           const SizedBox(height: 4),
-          const Text('Creator: Creator Name', style: castTextStyle),
+          Text('Creator: ${directors.join(', ')}', style: castTextStyle),
         ],
       ),
     );
@@ -292,9 +337,15 @@ class _SimilarMovies extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<MovieDetailedViewModel>();
+    final movie = model.similarMovies[index];
+
     return InkWell(
       onTap: () {
-        print('movie id: $index');
+        Navigator.of(context).pushNamed(
+          NavigationRoute.movieDetailed,
+          arguments: movie.id,
+        );
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(
@@ -304,21 +355,40 @@ class _SimilarMovies extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Row(
-              children: [
-                Container(
-                  width: 150,
-                  height: 75,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(16),
-                    image: const DecorationImage(
-                      image: NetworkImage(
-                          'https://rts.org.uk/sites/default/files/styles/9_column_landscape/public/sex_ed.png?itok=05UwrF_b'),
+            Expanded(
+              child: Row(
+                children: [
+                  movie.backdropPath != null
+                      ? Container(
+                          width: 150,
+                          height: 75,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                getImage('${movie.backdropPath}'),
+                              ),
+                            ),
+                          ),
+                        )
+                      : Container(
+                          width: 145,
+                          height: 80,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(6),
+                            color: accentGrey,
+                          ),
+                        ),
+                  Expanded(
+                    child: Text(
+                      movie.title,
+                      style: const TextStyle(
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                   ),
-                ),
-                const Text('Movie Name'),
-              ],
+                ],
+              ),
             ),
             IconButton(
               onPressed: () {},
