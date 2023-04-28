@@ -126,7 +126,7 @@ class _MovieCard extends StatelessWidget {
               onTap: () {
                 Navigator.of(context).pushNamed(
                   NavigationRoute.movieDetailed,
-                  arguments: model?.id,
+                  arguments: model!.id,
                 );
               },
               child: Container(

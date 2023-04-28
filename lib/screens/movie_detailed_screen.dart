@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:netflix_clone/constants/custom_colors.dart';
 import 'package:netflix_clone/navigation/navigation.dart';
 import 'package:netflix_clone/screens/screens.dart';
 import 'package:netflix_clone/utils/get_image.dart';
+import 'package:netflix_clone/utils/parse_date.dart';
 import 'package:netflix_clone/view_models/viewmodels.dart';
 import 'package:provider/provider.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetailedScreen extends StatefulWidget {
   const MovieDetailedScreen({Key? key}) : super(key: key);
@@ -26,6 +27,11 @@ class _MovieDetailedScreenState extends State<MovieDetailedScreen> {
     final model = context.watch<MovieDetailedViewModel>();
     final similar = model.similarMovies;
 
+    final trailerKey = model.movie?.videos.results
+        .firstWhere(
+            (video) => video.type == 'Trailer' && video.site == 'YouTube')
+        .key;
+
     return model.isLoading
         ? const LoaderScreen()
         : Scaffold(
@@ -34,7 +40,7 @@ class _MovieDetailedScreenState extends State<MovieDetailedScreen> {
                 children: [
                   Stack(
                     children: [
-                      const _Trailer(),
+                      _Trailer(trailerKey: trailerKey!),
                       Padding(
                         padding: const EdgeInsets.only(top: 4, right: 4),
                         child: Row(
@@ -87,15 +93,47 @@ class _MovieDetailedScreenState extends State<MovieDetailedScreen> {
   }
 }
 
-class _Trailer extends StatelessWidget {
-  const _Trailer({Key? key}) : super(key: key);
+class _Trailer extends StatefulWidget {
+  final String trailerKey;
+
+  const _Trailer({Key? key, required this.trailerKey}) : super(key: key);
+
+  @override
+  State<_Trailer> createState() => _TrailerState();
+}
+
+class _TrailerState extends State<_Trailer> {
+  late final YoutubePlayerController _videoController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _videoController = YoutubePlayerController(
+      initialVideoId: widget.trailerKey,
+      flags: const YoutubePlayerFlags(
+        autoPlay: false,
+        mute: false,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _videoController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: 200,
-      color: Colors.grey,
+    return YoutubePlayer(
+      controller: _videoController,
+      showVideoProgressIndicator: true,
+      progressIndicatorColor: accentRed,
+      progressColors: const ProgressBarColors(
+        playedColor: accentRed,
+        handleColor: accentRed,
+      ),
     );
   }
 }
@@ -179,11 +217,8 @@ class _Description extends StatelessWidget {
     final model = context.read<MovieDetailedViewModel>();
     final movie = model.movie;
 
-    final parsedDate = DateTime.parse(movie!.releaseDate);
-    final date = DateFormat('y').format(parsedDate);
-
     final List<String> genres = [];
-    for (var genre in movie.genres) {
+    for (var genre in movie!.genres) {
       genres.add(genre.name);
     }
 
@@ -217,7 +252,7 @@ class _Description extends StatelessWidget {
           Row(
             children: [
               Text(
-                date,
+                parseDate(movie.releaseDate, 'y'),
                 style: const TextStyle(
                   fontSize: 16,
                 ),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:netflix_clone/navigation/navigation.dart';
 import 'package:netflix_clone/screens/loader_screen.dart';
 import 'package:netflix_clone/utils/get_image.dart';
+import 'package:netflix_clone/utils/parse_date.dart';
 import 'package:netflix_clone/view_models/upcoming_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -105,10 +105,6 @@ class _Movie extends StatelessWidget {
     final model = context.read<UpcomingViewModel>();
     final movie = model.upcomingMovies[index];
 
-    final parsedDate = DateTime.parse(movie.releaseDate);
-    final month = DateFormat('MMM').format(parsedDate);
-    final day = DateFormat('d').format(parsedDate);
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       child: Column(
@@ -129,14 +125,14 @@ class _Movie extends StatelessWidget {
           Row(
             children: [
               Text(
-                month.toUpperCase(),
+                parseDate(movie.releaseDate, 'MMM'),
                 style: const TextStyle(
                   color: Colors.grey,
                 ),
               ),
               const SizedBox(width: 4),
               Text(
-                day,
+                parseDate(movie.releaseDate, 'd'),
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
