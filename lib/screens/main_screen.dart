@@ -27,7 +27,7 @@ class _MainScreenState extends State<MainScreen> {
         children: [
           _screenProvider.homeScreen(),
           _screenProvider.upcomingMovieScreen(),
-          const Text('Favorites'),
+          _screenProvider.favoriteMovieScreen(),
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

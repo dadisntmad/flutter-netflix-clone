@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:netflix_clone/models/movie_list.dart';
 import 'package:netflix_clone/models/user.dart';
 
 class UserClient {
@@ -45,5 +46,22 @@ class UserClient {
       ),
     );
     return response.body;
+  }
+
+  Future<MovieList> fetchFavoriteMovies({
+    required int accountId,
+    required String sessionId,
+  }) async {
+    final url =
+        '$_baseUrl/account_id/favorite/movies?api_key=$_apiKey&session_id=$sessionId&sort_by=created_at.desc';
+
+    final response = await _httpClient.get(Uri.parse(url));
+
+    if(response.statusCode == 200) {
+      final result = jsonDecode(response.body) as Map<String, dynamic>;
+      return MovieList.fromJson(result);
+    } else {
+      throw Exception('Failed to fetch favorite movies.');
+    }
   }
 }

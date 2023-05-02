@@ -54,4 +54,11 @@ class ScreenProvider {
       child: const MovieDetailedScreen(),
     );
   }
+
+  Widget favoriteMovieScreen() {
+    return ChangeNotifierProvider(
+      create: (_) => FavoriteMovieViewModel(),
+      child: const FavoriteMovieScreen(),
+    );
+  }
 }
