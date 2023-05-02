@@ -6,6 +6,7 @@ import 'package:netflix_clone/utils/get_image.dart';
 import 'package:netflix_clone/utils/parse_date.dart';
 import 'package:netflix_clone/view_models/viewmodels.dart';
 import 'package:provider/provider.dart';
+import 'package:readmore/readmore.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class MovieDetailedScreen extends StatefulWidget {
@@ -292,12 +293,39 @@ class _Description extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 10),
-          Text(
+          ReadMoreText(
             'Cast: ${actors.join(', ')}',
             style: castTextStyle,
+            trimLines: 1,
+            trimMode: TrimMode.Line,
+            trimCollapsedText: 'more',
+            trimExpandedText: ' less',
+            moreStyle: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+            lessStyle: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
           ),
           const SizedBox(height: 4),
-          Text('Creator: ${directors.join(', ')}', style: castTextStyle),
+          ReadMoreText(
+            'Director: ${directors.join(', ')}',
+            style: castTextStyle,
+            trimLines: 1,
+            trimMode: TrimMode.Line,
+            trimCollapsedText: 'more',
+            trimExpandedText: ' less',
+            moreStyle: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+            lessStyle: const TextStyle(
+              fontWeight: FontWeight.w600,
+              color: Colors.grey,
+            ),
+          ),
         ],
       ),
     );
@@ -338,13 +366,19 @@ class _RateActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final model = context.read<MovieDetailedViewModel>();
+    final isFavorite =
+        context.select((MovieDetailedViewModel model) => model.isFavorite);
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
       child: Row(
         children: [
           _RateButton(
-            onPressed: () {},
-            icon: Icons.add,
+            onPressed: () {
+              model.addToFavorites();
+            },
+            icon: isFavorite ? Icons.done : Icons.add,
             title: 'My List',
           ),
           const SizedBox(width: 14),

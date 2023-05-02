@@ -21,4 +21,29 @@ class UserClient {
       throw Exception('Failed to load account details.');
     }
   }
+
+  Future<String> markMovieAsFavorite({
+    required int movieId,
+    required bool isFavorite,
+    required int accountId,
+    required String sessionId,
+  }) async {
+    final url =
+        '$_baseUrl/$accountId/favorite?api_key=$_apiKey&session_id=$sessionId';
+
+    final response = await _httpClient.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(
+        <String, dynamic>{
+          'media_type': 'movie',
+          'media_id': movieId,
+          'favorite': isFavorite,
+        },
+      ),
+    );
+    return response.body;
+  }
 }

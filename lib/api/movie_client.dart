@@ -76,4 +76,22 @@ class MovieClient {
       throw Exception('Failed to fetch similar movies.');
     }
   }
+
+  Future<bool> isFavorite({
+    required int movieId,
+    required String sessionId,
+  }) async {
+    final url =
+        '$_baseUrl/$movieId/account_states?api_key=$_apiKey&session_id=$sessionId';
+
+    final response = await _httpClient.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final result = jsonDecode(response.body) as Map<String, dynamic>;
+      final isFavorite = result['favorite'] as bool;
+      return isFavorite;
+    } else {
+      throw Exception('Failed to fetch favorite movies.');
+    }
+  }
 }
